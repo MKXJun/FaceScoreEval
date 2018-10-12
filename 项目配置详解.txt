@@ -1,0 +1,139 @@
+配置项目详解
+【1.】概览
+本解决方案FaceScoreEval主要分为如下6个项目：
+-dlib: 人脸识别/特征点获取静态库之一
+-stasm: 人脸识别/特征点获取静态库之一
+-FaceScoreEvalLib: 颜值评估静态库
+-FaceScoreEvalDll: 颜值评估动态库
+-FaceScoreEvalTest: 颜值评估静态库功能测试
+-FacialAttractivenessPrediction: 颜值评估程序(使用动态库)
+
+注意: 
+1.建议将opencv_world320.dll和opencv_world320d.dll放到C:/Windows/system32中
+
+【2.】关于文件路径，你不得不了解的一些宏
+$(Configuration) 在Debug模式下的值为Debug，Release模式下的值为Release
+$(SolutionDir) 解决方案所在目录
+$(ProjectDir) 当前项目所在目录
+
+【3.】项目配置说明
+3.1.dlib项目配置说明
+本项目是cmake生成的，并对其默认生成的属性页进行了一些修改
+-dlib项目配置属性(Debug/Release x64):
+|-常规
+| |-输出目录        $(SolutionDir)ThirdParty\dlib-19.1\lib\$(Configuration)\
+| |-目标文件名      dlib
+| |-目标文件扩展名  .lib
+| |-配置类型        静态库(.lib)
+| |-字符集          使用多字节字符集
+|-VC++目录
+| |-包含目录        添加$(SolutionDir)ThirdParty\dlib-19.1\dlib\external\libpng
+|                       $(SolutionDir)ThirdParty\dlib-19.1\dlib\external\zlib
+
+
+3.2.stasm项目配置说明						
+本项目是新建的，只需要添加源文件仅项目即可。使用预编译头技术可以节省大量的编译时间。
+注意: 该项目需要依赖opencv库
+
+-stasm.cpp配置属性(Debug/Release x64):
+|-C/C++
+| |-预编译头
+| | |-预编译头      创建(/Yc)
+| | |-预编译头文件  stasm.h
+
+-其余源文件配置属性(Debug/Release x64):
+|-C/C++
+| |-预编译头
+| | |-预编译头      使用(/Yu)
+| | |-预编译头文件  stasm.h
+
+-stasm项目配置属性(Debug/Release x64):
+|-常规
+| |-输出目录        $(SolutionDir)ThirdParty\Stasm\lib\$(Configuration)\
+| |-目标文件名      stasm
+| |-目标文件扩展名  .lib
+| |-配置类型        静态库(.lib)
+| |-字符集          使用多字节字符集
+|-VC++目录
+| |-包含目录        添加$(SolutionDir)ThirdParty\Stasm\include
+| |                     $(SolutionDir)ThirdParty\OpenCV\include
+| |-库目录          添加$(SolutionDir)ThirdParty\OpenCV\lib
+|-C/C++
+| | |-常规
+| | | |-调试信息格式  C7兼容(/Z7)
+
+3.3.FaceScoreEvalLib项目配置说明
+本项目集成了颜值评估的核心算法部分，注意该项目使用了预编译头技术，在新建源文件时若有需要用到stasm, dlib或opencv，则应当使用该技术。
+注意: 不能直接包含dlib存放头文件所在的文件夹!
+
+-FaceP.cpp配置属性(Debug/Release x64):
+|-C/C++
+| |-预编译头
+| | |-预编译头      创建(/Yc)
+| | |-预编译头文件  FaceP.h
+
+-其余源文件配置属性(Debug/Release x64):
+|-C/C++
+| |-预编译头
+| | |-预编译头      使用(/Yu)
+| | |-预编译头文件  FaceP.h
+
+-FaceScoreEvalLib配置属性(Debug/Release x64):
+|-VC++目录
+| |-包含目录        添加$(ProjectDir)Source
+| |                 $(SolutionDir)ThirdParty\dlib-19.1
+| |                 $(SolutionDir)ThirdParty\Stasm\include
+| | 				$(SolutionDir)ThirdParty\OpenCV\include
+
+3.4.FaceScoreEvalTest项目配置说明
+本项目用于测试FaceScoreEvalLib编写的内容
+
+-FaceScoreEvalTest配置属性(Debug/Release x64):
+|-常规
+| |-输出目录        $(SolutionDir)Programs\
+|-VC++目录
+| |-包含目录        添加$(SolutionDir)Projects\FaceScoreEvalLib\
+| |                 $(SolutionDir)ThirdParty\OpenCV\include
+| |-库目录          添加$(SolutionDir)Projects\FaceScoreEvalLib\Lib\$(Configuration)\
+| |                 $(SolutionDir)ThirdParty\dlib-19.1\lib\$(Configuration)\
+| |                 $(SolutionDir)ThirdParty\Stasm\lib\$(Configuration)\
+| |                 $(SolutionDir)ThirdParty\OpenCV\lib
+|-链接器
+| |-输入
+| | |-附加依赖项    添加FaceScoreEval.lib
+| | |               opencv_world320d.lib(Release模式下为opencv_world320.lib)
+| | |               dlib.lib
+| | |               stasm.lib
+
+3.5.FaceScoreEvalDll项目配置说明
+本项目用于创建动态库给C#项目使用
+
+-FaceScoreEvalDll配置属性(Debug/Release x64):
+|-常规
+| |-输出目录        $(SolutionDir)Programs\
+| |-目标文件名      FaceScoreEval
+| |-目标文件扩展名  .dll
+| |-配置类型        动态库(.dll)
+|-VC++目录
+| |-包含目录        添加$(SolutionDir)Projects\FaceScoreEvalLib\
+| |                 $(SolutionDir)ThirdParty\dlib-19.1
+| |                 $(SolutionDir)ThirdParty\Stasm\include
+| |                 $(SolutionDir)ThirdParty\OpenCV\include
+| |-库目录          $(SolutionDir)Projects\FaceScoreEvalLib\lib\$(Configuration)
+| |                 $(SolutionDir)ThirdParty\dlib-19.1\lib\$(Configuration)
+| |                 $(SolutionDir)ThirdParty\Stasm\lib\$(Configuration)
+| |                 $(SolutionDir)ThirdParty\OpenCV\lib
+|-链接器
+| |-输入
+| | |-附加依赖项    添加FaceScoreEval.lib
+| | |               opencv_world320d.lib(Release模式下为opencv_world320.lib)
+| | |               dlib.lib
+| | |               stasm.lib
+
+3.6.FacialAttractivenessPrediction项目配置说明
+本项目使用了FaceScoreEval的动态库，为演示程序。
+
+-FacialAttractivenessPrediction配置属性(Debug/Release x64):
+|-生成
+| |-输出路径         ..\..\Programs\
+

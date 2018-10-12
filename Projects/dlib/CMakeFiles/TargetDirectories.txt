@@ -1,0 +1,4 @@
+E:/Code/C++编程集/FaceScoreEval/Projects/BuildDlib/CMakeFiles/dlib.dir
+E:/Code/C++编程集/FaceScoreEval/Projects/BuildDlib/CMakeFiles/INSTALL.dir
+E:/Code/C++编程集/FaceScoreEval/Projects/BuildDlib/CMakeFiles/ALL_BUILD.dir
+E:/Code/C++编程集/FaceScoreEval/Projects/BuildDlib/CMakeFiles/ZERO_CHECK.dir

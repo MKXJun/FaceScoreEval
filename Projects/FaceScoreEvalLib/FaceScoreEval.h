@@ -1,0 +1,28 @@
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// 
+// 头文件名: FaceScoreEval.h
+// 
+// 作者: X_Jun
+//
+// 使用库: Opencv3.2, Dlib, STASM
+//
+// 描述: 包含了颜值库的所有功能
+//
+// 备注：需要支持C++11
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+#ifndef _FACESCOREEVAL_H_
+#define _FACESCOREEVAL_H_
+
+#include "FaceScore.h"
+#include "FaceShape.h"
+#include "FaceProportion.h"
+#include "FaceColor.h"
+#include "StarFaceMatch.h"
+#include "Utility.h"
+
+
+
+
+#endif

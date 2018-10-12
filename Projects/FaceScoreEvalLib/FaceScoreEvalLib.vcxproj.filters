@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件\Tools">
+      <UniqueIdentifier>{821ae0ad-29e6-42f7-829a-ae0eb2909ab7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Features">
+      <UniqueIdentifier>{e912bd51-e2db-4cbd-b9cb-714475a0592b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Unused">
+      <UniqueIdentifier>{8c5e1f38-1727-47fd-8a61-7356a17c12ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Features">
+      <UniqueIdentifier>{e61406f1-555a-4697-b64b-dac2390bf73e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Tools">
+      <UniqueIdentifier>{aeabbc2b-27e4-4c98-a289-b4ec7c90924c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Unused">
+      <UniqueIdentifier>{79914c47-c93c-44cc-bd63-f746a08c1a88}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FaceP.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="FaceColor.cpp">
+      <Filter>源文件\Features</Filter>
+    </ClCompile>
+    <ClCompile Include="FaceProportion.cpp">
+      <Filter>源文件\Features</Filter>
+    </ClCompile>
+    <ClCompile Include="FaceShape.cpp">
+      <Filter>源文件\Features</Filter>
+    </ClCompile>
+    <ClCompile Include="FaceImage.cpp">
+      <Filter>源文件\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="FaceScore.cpp">
+      <Filter>源文件\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="faceTypeFit.cpp">
+      <Filter>源文件\Unused</Filter>
+    </ClCompile>
+    <ClCompile Include="FeaturePointSet.cpp">
+      <Filter>源文件\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="File.cpp">
+      <Filter>源文件\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="NoseDetection.cpp">
+      <Filter>源文件\Unused</Filter>
+    </ClCompile>
+    <ClCompile Include="StarFaceMatch.cpp">
+      <Filter>源文件\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility.cpp">
+      <Filter>源文件\Tools</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FaceP.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FaceScoreEval.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="FaceColor.h">
+      <Filter>头文件\Features</Filter>
+    </ClInclude>
+    <ClInclude Include="FaceImage.h">
+      <Filter>头文件\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="FaceProportion.h">
+      <Filter>头文件\Features</Filter>
+    </ClInclude>
+    <ClInclude Include="FaceScore.h">
+      <Filter>头文件\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="FaceShape.h">
+      <Filter>头文件\Features</Filter>
+    </ClInclude>
+    <ClInclude Include="FeaturePointSet.h">
+      <Filter>头文件\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="NoseDetection.h">
+      <Filter>头文件\Unused</Filter>
+    </ClInclude>
+    <ClInclude Include="File.h">
+      <Filter>头文件\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>头文件\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="StarFaceMatch.h">
+      <Filter>头文件\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="FaceTypeFit.h">
+      <Filter>头文件\Unused</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
