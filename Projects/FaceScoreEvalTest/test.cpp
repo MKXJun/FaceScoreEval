@@ -63,6 +63,13 @@ void FaceTest::StarFaceDatabaseTest()
 	Face::OutputTransform();
 }
 
+void FaceTest::DetectFaceSpeedTest()
+{
+	Mat mat = imread("faceSamples/4.jpg");
+	Rect rc;
+	detectFaceByStasm(mat, &rc);
+}
+
 void drawPointNumber(const char* winName, const char* path)
 {
 	FaceImage faceImage;

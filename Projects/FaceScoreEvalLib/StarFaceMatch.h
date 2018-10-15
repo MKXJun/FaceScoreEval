@@ -30,9 +30,11 @@ struct MatchInfo
 // **********************************************
 // 功能: 构建明星脸的脸部比例数据库
 // 参数:
-//       [In]sourceFolderPath 明星脸图片所在的源文件夹
-//       [In]destFilePath 目标输出路径，需指定文件名类型位.dat
+//       [In]sourceFolderPath 明星脸图片所在的源文件夹(已经变换好的)
+//       [In]destFilePath 目标输出路径，需指定文件名类型为.dat
 // 返回值: 数据库是否构建成功
+// 备注: 明星脸图片文件夹内不能有图片外的文件
+//       并且输出路径不能在图片文件夹内
 bool BuildStarFaceDatabase(const char* sourceDirectory, const char* destDataFilePath);
 
 // **********************************************

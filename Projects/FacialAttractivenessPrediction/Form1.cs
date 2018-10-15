@@ -21,26 +21,47 @@ namespace FacialAttractivenessPrediction
 {
     public partial class Form1 : Form
     {
-        int score = 0;
-        int faceScore = 0;
-        int faceTypeScore = 0;
-        int faceColorScore = 0;
-        FilterInfoCollection videoDevices;
-        VideoCaptureDevice videoDevice;
-        IVideoSource videoSource;
-        Bitmap bitmap = null;//当前帧
-        Rectangle rect;
-        BitmapData bmpData;
-        bool isRun = true;
-        int x = 0, y = 0, w = 0, h = 0;
+        public class FaceData
+        {
+            public Bitmap bitmap;
+            public Rectangle rect;
+            public int faceTopLeftX;
+            public int faceTopLeftY;
+            public int faceWidth;
+            public int faceHeight;
+        }
+        private FaceData faceData = new FaceData();
+        private int score = 0;
+        private int faceScore = 0;
+        private int faceTypeScore = 0;
+        private int faceColorScore = 0;
+        private FilterInfoCollection videoDevices;
+        private VideoCaptureDevice videoDevice;
+        private IVideoSource videoSource;
+        private Bitmap bitmap = null;   //当前帧
+        private BitmapData bmpData;
+        private bool isRun = true;
 
-        public int selectedDeviceIndex = 0;
+        private int selectedDeviceIndex = 0;
 
-        public IntPtr capture;
+        private Thread thread = new Thread(new ParameterizedThreadStart(drawRect));
+        private int fps = 0;
+        private int facefps = 0;
 
         public Form1()
         {
             InitializeComponent();
+        }
+
+        public static void drawRect(object obj)
+        {
+            FaceData faceData = obj as FaceData;
+            BitmapData bmpData = faceData.bitmap.LockBits(faceData.rect, ImageLockMode.ReadWrite, faceData.bitmap.PixelFormat);
+            Program.detectFace(bmpData.Scan0, bmpData.Width, bmpData.Height,
+                ref faceData.faceTopLeftX, ref faceData.faceTopLeftY, 
+                ref faceData.faceWidth, ref faceData.faceHeight);
+            faceData.bitmap.UnlockBits(bmpData);
+
         }
 
         private unsafe void button1_Click(object sender, EventArgs e)
@@ -48,7 +69,7 @@ namespace FacialAttractivenessPrediction
             //Program.faceData ff = new Program.faceData();
             //Program.getFaceDate(ref ff);
             //label1.Text = ff.image[0] + "," + ff.score.ToString();
-            GC.Collect();//手动回收垃圾
+            //GC.Collect();//手动回收垃圾
             //枚举所有摄像机
             if (isRun)
             {
@@ -57,7 +78,7 @@ namespace FacialAttractivenessPrediction
             }
             Thread.Sleep(10);
             score = 0;
-            bmpData = bitmap.LockBits(rect, ImageLockMode.ReadWrite, bitmap.PixelFormat);
+            bmpData = bitmap.LockBits(faceData.rect, ImageLockMode.ReadWrite, bitmap.PixelFormat);
             if (Program.getScore(bmpData.Scan0, bmpData.Width, bmpData.Height, ref score, ref faceScore, ref faceTypeScore, ref faceColorScore))
             {
                 bitmap.UnlockBits(bmpData);
@@ -88,23 +109,54 @@ namespace FacialAttractivenessPrediction
             isRun = !isRun;
         }
 
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            Text = "颜值评估系统 FPS: " + fps.ToString() + " 识别FPS: " + facefps.ToString();
+            fps = 0;
+            facefps = 0;
+        }
+
         private unsafe void show(object sender, NewFrameEventArgs eventArgs)
         {
             GC.Collect();
             if (isRun)
             {
-                rect = new Rectangle(0, 0, eventArgs.Frame.Width, eventArgs.Frame.Height);
-                bitmap = eventArgs.Frame.Clone(rect, eventArgs.Frame.PixelFormat);
-                bmpData = bitmap.LockBits(rect, ImageLockMode.ReadWrite, bitmap.PixelFormat);
-                Program.detectFace(bmpData.Scan0, bmpData.Width, bmpData.Height, ref x, ref y, ref w, ref h);
+                if (faceData.rect.Width == 0 && faceData.rect.Height == 0)
+                {
+                    faceData.rect = new Rectangle(0, 0, eventArgs.Frame.Width, eventArgs.Frame.Height);
+                }
+                
+                bitmap = eventArgs.Frame.Clone(faceData.rect, eventArgs.Frame.PixelFormat);
+
+                ThreadState state = thread.ThreadState;
+                if (state == ThreadState.Stopped || state == ThreadState.Unstarted)
+                {
+                    if (state == ThreadState.Stopped)
+                    {
+                        thread = new Thread(new ParameterizedThreadStart(drawRect));
+                    }
+                    faceData.bitmap = eventArgs.Frame.Clone(faceData.rect, eventArgs.Frame.PixelFormat); ;
+                    thread.Start(faceData);
+                    facefps++;
+                }
+
+                bmpData = bitmap.LockBits(faceData.rect, ImageLockMode.ReadWrite, bitmap.PixelFormat);
+                Program.drawRectangle(bmpData.Scan0, bmpData.Width, bmpData.Height,
+                    faceData.faceTopLeftX, faceData.faceTopLeftY,
+                    faceData.faceWidth, faceData.faceHeight);
                 bitmap.UnlockBits(bmpData);
                 pictureBox1.Image = bitmap;
+                fps++;
+
+                
             }
             else
             {
                 Thread.Sleep(1);
             }
         }
+
+
 
         private void Form1_Load(object sender, EventArgs e)
         {
