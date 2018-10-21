@@ -13,15 +13,23 @@ namespace Face
 	namespace fs = std::experimental::filesystem;
 
 	// **********************************************
-	// 功能: 构建明星脸的脸部比例数据库
+	// 功能: 构建明星脸的脸部比例数据库和图片库(减少人脸识别库调用)
 	// 参数:
-	//       [In]sourceFolderPath 明星脸图片所在的源文件夹
+	//       [In]sourceDir 明星脸图片所在的源文件夹(未变换好的)
+	//       [In]destDir   输出
 	//       [In]destFilePath 目标输出路径，需指定文件名类型为.dat
 	// 返回值: 数据库是否构建成功
 	// 备注: 明星脸图片文件夹内不能有图片外的文件
 	//       并且输出路径不能在图片文件夹内
 	bool BuildStarFaceDatabase(const char * sourceDirectory, const char * destDataFile)
 	{
+		// 数据布局
+		// [明星数据
+		//   [明星名]12字节
+		//   [比例数据]68字节
+		// ]
+
+
 		// 构造路径，检验路径是否存在
 		fs::path directory(sourceDirectory);
 		if (!fs::exists(directory))
@@ -133,65 +141,55 @@ namespace Face
 	}
 
 
-	/**
-	 *	@ 描述 - 提取 Output\Source 文件夹中图片信息，分析获取特征数据并存放在 Output\Transform 中。
-	 *	@ 作者 - HansonLost
-	 */
+	 // **********************************************
+	 // 功能: 提取分析Output/Source的图片信息，
+	 // 将变换后的图片和脸部比例数据存放在Output/Transform
 	void OutputTransform()
 	{
 
-		std::string inputDirectory = "Output\\Source";
-		std::string outputDirectoy = "Output\\Transform";
+		std::string inputDir = "Output/Source";
+		std::string outputDir = "Output/Transform";
 
 		// 确保输入路径存在
-		assert(fs::exists(inputDirectory));
+		assert(fs::exists(inputDir));
 
 		//获取明星们的名字对应的路径
-		std::vector<std::string> starsNamePaths;
-		assert(File::GetChildDirectories(inputDirectory, starsNamePaths));
-
-		// 明星输出文件夹的绝对路径
-		std::vector<std::string> starOutputDirectory;
+		std::vector<std::string> starNameDirs;
+		assert(File::GetChildDirectories(inputDir, starNameDirs));
 
 		// 由于输出文件夹可能保留旧的文件数据，因此直接把输出文件夹及里面的文件删除，重新创建一个。
-		if (fs::exists(outputDirectoy))
+		if (fs::exists(outputDir))
 		{
-			// 删除文件/文件夹数目必然不为0
-			assert(fs::remove_all(outputDirectoy) != 0);
+			fs::remove_all(outputDir);
 		}
+		assert(fs::create_directory(outputDir));
 
-		assert(fs::create_directory(outputDirectoy));
-		for (const std::string& path : starsNamePaths)
+
+
+		// 给每个明星创建输出的文件夹，然后构建数据库
+		for (std::string starNameDir : starNameDirs)
 		{
-			assert(fs::create_directory(path));
-		}
 
+			// 创建明星文件夹
+			std::string starOutputDir = starNameDir;
+			starOutputDir.replace(starOutputDir.find("Source"), 6, "Transform");
+			assert(fs::create_directory(starOutputDir));
 
-		for (size_t i = 0; i < starsNamePaths.size(); ++i)
-		{
-			// 明星名字和后缀
-			size_t pos = starsNamePaths[i].find_last_of('.');
-			std::string name = starsNamePaths[i].substr(0, pos);
-			std::string postfix = starsNamePaths[i].substr(pos + 1);
-			// 该明星的输出文件夹
-			const std::string& OutputPath = starOutputDirectory[i];
-
-			// 该明星的源照片文件
-			std::vector<std::string> InFilesSet;
-			assert(File::GetChildFiles(inputDirectory + '\\' + name, InFilesSet));
-
+			// 构建明星数据库
 			BuildStarFaceDatabase(
-				(inputDirectory + '\\' + name).c_str(),
-				(OutputPath + '\\' + "FaceDatabase.dat").c_str()
+				starNameDir.c_str(),
+				(starOutputDir + "/FaceDatabase.dat").c_str()
 			);
 
-			int ImageNum = 0;
-			for (auto file : InFilesSet)
+			std::vector<std::string> starFiles;
+			File::GetChildFiles(starNameDir, starFiles);
+
+			// 进行变换并输出文件
+			for (std::string file : starFiles)
 			{
 				FaceImage image;
 				image.OpenRawFaceImage(file);
-				image.SaveFaceImage(OutputPath + '\\' + name + std::to_string(ImageNum) + '.' + postfix);
-				++ImageNum;
+				image.SaveFaceImage(file.replace(file.find("Source"), 6, "Transform"));
 			}
 		}
 	}

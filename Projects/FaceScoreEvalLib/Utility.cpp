@@ -11,11 +11,14 @@ bool detectFaceByStasm(const Mat & inputImage, Rect * pArea)
 	Mat des;
 	cvtColor(inputImage, des, CV_RGB2GRAY);
 	const char* datadir = "./data";
-	int foundface = 0;
-	stasm_init(datadir, 0 /*trace*/);
+	static int isInit = 0;
+	if (!isInit)
+	{
+		isInit = stasm_init(datadir, 0 /*trace*/);
+	}
 	stasm::DetPar detpar;
 	static stasm::FaceDet facedet_g;
-	facedet_g.DetectFaces_(des, "./faceSamples/258.jpg", true, 10, NULL);
+	facedet_g.DetectFaces_(des, "", true, 10, NULL);
 	detpar = facedet_g.NextFace_();  // get next face's detpar from the face det
 
 	if (stasm::Valid(detpar.x))

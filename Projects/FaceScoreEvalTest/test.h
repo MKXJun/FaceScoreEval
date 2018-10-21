@@ -8,6 +8,8 @@ namespace FaceTest
 	void FaceShapeTest();
 
 	void StarFaceDatabaseTest();
+
+	void DetectFaceSpeedTest();
 }
 
 void drawPointNumber(const char* winName, const char* path);

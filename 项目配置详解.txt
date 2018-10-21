@@ -1,4 +1,4 @@
-配置项目详解
+﻿配置项目详解
 【1.】概览
 本解决方案FaceScoreEval主要分为如下6个项目：
 -dlib: 人脸识别/特征点获取静态库之一
@@ -18,7 +18,8 @@ $(ProjectDir) 当前项目所在目录
 
 【3.】项目配置说明
 3.1.dlib项目配置说明
-本项目是cmake生成的，并对其默认生成的属性页进行了一些修改
+本项目是cmake生成的，并对其默认生成的属性页进行了一些修改。
+注意：建议自己使用cmake生成dlib项目并拖到该解决方案中。
 -dlib项目配置属性(Debug/Release x64):
 |-常规
 | |-输出目录        $(SolutionDir)ThirdParty\dlib-19.1\lib\$(Configuration)\

@@ -17,7 +17,8 @@ namespace FacialAttractivenessPrediction
         [DllImport(@"FaceScoreEval.dll")]
         public static extern unsafe bool getScore(IntPtr data, int imageWidth, int imageHeight, 
             ref int totalScore, ref int faceScore, ref int faceTypeScore, ref int faceColorScore);
-
+        [DllImport(@"FaceScoreEval.dll")]
+        public static extern unsafe void drawRectangle(IntPtr data, int imageWidth, int imageHeight, int x, int y, int w, int h);
 
         /// <summary>
         /// 应用程序的主入口点。

@@ -9,7 +9,7 @@ using namespace std;
 int main()
 {
 	// FaceTest::FaceShapeTest();
-	FaceTest::StarFaceDatabaseTest();
+	FaceTest::DetectFaceSpeedTest();
 	
 
 	std::system("pause");

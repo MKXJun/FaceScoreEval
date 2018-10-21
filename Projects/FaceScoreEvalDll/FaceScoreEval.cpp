@@ -22,31 +22,32 @@ extern "C" __declspec(dllexport) bool __stdcall detectFace(uchar * data, int ima
 	Mat inputImage(Size(imageWidth, imageHeight), CV_8UC3);//RGB原图
 	inputImage.data = data;
 	Mat des;//灰度图
-	static dlib::frontal_face_detector detector = dlib::get_frontal_face_detector();
-	cvtColor(inputImage, des, CV_BGR2GRAY);
+	// static dlib::frontal_face_detector detector = dlib::get_frontal_face_detector();
+	// cvtColor(inputImage, des, CV_BGR2GRAY);
 
 	// 抓取位图帧直到用户关闭主窗口
-	dlib::cv_image<dlib::bgr_pixel> cimg(inputImage);
+	// dlib::cv_image<dlib::bgr_pixel> cimg(inputImage);
 	// 侦测脸部位置
-	std::vector<dlib::rectangle> faces = (detector)(cimg);
-	if (faces.empty()) {
+	// std::vector<dlib::rectangle> faces = detector(cimg);
+	/*if (faces.empty()) {
 		return false;
 	}
 	else
 	{
-		// 如果侦测到脸部，绘制矩形区域
-		if (detectFaceByStasm(inputImage, nullptr))
-		{
-			x = faces[0].left();
-			y = faces[0].top();
-			w = faces[0].width();
-			h = faces[0].height();
-			cv::rectangle(inputImage, Rect(x, y, w, h), Scalar(0, 255, 0));
-		}
-		else
-			return false;
+	}*/
+	// 如果侦测到脸部，绘制矩形区域
+	cv::Rect area;
+	if (detectFaceByStasm(inputImage, &area))
+	{
+		x = area.x;
+		y = area.y;
+		w = area.width;
+		h = area.height;
+		return true;
 	}
-	return true;
+	else
+		return false;
+	
 }
 
 extern "C" __declspec(dllexport) bool __stdcall getScore(uchar* data, int imageWidth, int imageHeight, int &totalScore,
@@ -103,4 +104,12 @@ extern "C" __declspec(dllexport) bool __stdcall getScore(uchar* data, int imageW
 	totalScore += faceColorScore * 2 / 10;
 
 	return true;
+}
+
+extern "C" __declspec(dllexport) void __stdcall drawRectangle(uchar * data, int imageWidth, int imageHeight, int x, int y, int w, int h)
+{
+	FaceImage faceImage;
+	faceImage.faceMat = Mat(Size(imageWidth, imageHeight), CV_8UC3, data);
+	faceImage.faceMat.data = data;
+	cv::rectangle(faceImage.faceMat, Rect(x, y, w, h), Scalar(0, 255, 0));
 }
